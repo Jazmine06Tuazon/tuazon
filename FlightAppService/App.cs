@@ -1,7 +1,9 @@
 ﻿
 using FlightModels;
+using System.IO.Pipes;
 namespace FlightAppService
 {
+
     public class App
     {
         public static bool IsValidFullName(string name)
@@ -24,8 +26,9 @@ namespace FlightAppService
 
         public static bool IsInputEmpty(string input)
         {
-            return string.IsNullOrWhiteSpace(input);
-        }
+            
+            return !string.IsNullOrWhiteSpace(input);
+        } 
 
         public static bool IsNumericOnly(string pass)
         {
@@ -36,7 +39,7 @@ namespace FlightAppService
             {
                 if (!char.IsDigit(c))
                     return false;
-            }
+            } 
 
             return true;
         }
@@ -46,79 +49,44 @@ namespace FlightAppService
         {
             private int excessPrice = 250;
             private int prepaidPrice = 340;
-            private int standardSeat = 150;
-            private int premiumSeat = 250;
-            public int HandleBaggage()
+            public int standardSeat = 150;
+            public int premiumSeat = 250;
+            public int HandleBaggage(int baggage, int kg)
             {
                 int bagTotal = 0;
-                int kg = 0;
 
-                while (true)
-                {
-                    Console.WriteLine("Baggage Allowance");
-                    Console.WriteLine("1. Excess Baggage: ₱250 per kg \n2. Prepaid Baggage: ₱340 per kg");
-                    Console.Write("Choose: ");
-                    string input = Console.ReadLine();
+                if (kg < 0)
+                    throw new ArgumentException("Invalid kg");
 
-                    if (!int.TryParse(input, out int baggage) || (baggage != 1 && baggage != 2))
-                    {
-                        Console.WriteLine("Invalid choice. Enter 1 or 2.");
-                        continue;
-                    }
+                if (baggage == 1)
+                    bagTotal += excessPrice * kg;
+                else if (baggage == 2)
+                    bagTotal += prepaidPrice * kg;
+                else
+                    throw new ArgumentException("Invalid baggage type");
 
-                    while (true)
-                    {
-                        Console.Write("Enter kg: ");
-                        string kgInput = Console.ReadLine();
-
-                        if (!int.TryParse(kgInput, out kg) || kg <= 0)
-                        {
-                            Console.WriteLine("Invalid kg. Enter a positive number.");
-                            continue;
-                        }
-                        break;
-                    }
-
-                    if (baggage == 1)
-                        bagTotal += excessPrice * kg;
-                    else if (baggage == 2)
-                        bagTotal += prepaidPrice * kg;
-
-                    break;
-                }
-
+                int x = bagTotal;
                 return bagTotal;
             }
+        
 
-            public int HandleSeat()
+        public int HandleSeat(int seat)
+        {
+                if (seat == 1)
+                    return standardSeat;
+                else if (seat == 2)
+                    return premiumSeat;
+                else
+                    throw new ArgumentException("Invalid seat type");
+        }
+
+        public int CalculateTotal(int baggage, int kg, int seat)
             {
-                while (true)
-                {
-                    Console.WriteLine("\nSeat Selection");
-                    Console.WriteLine("1. Standard seats: Php150 - Php280\n2. Premium seats: Php250 - Php1,099");
-                    Console.Write("Choose: ");
-                    string input = Console.ReadLine();
-
-                    if (!int.TryParse(input, out int seat) || (seat != 1 && seat != 2))
-                    {
-                        Console.WriteLine("Invalid choice. Enter 1 or 2.");
-                        continue;
-                    }
-
-                    if (seat == 1)
-                        return standardSeat;
-                    else
-                        return premiumSeat;
-                }
-            }
-
-            public int CalculateTotal()
-            {
-                int bagCost = HandleBaggage();
-                int seatCost = HandleSeat();
+                int bagCost = HandleBaggage(baggage, kg);
+                int seatCost = HandleSeat(seat);
                 int total = bagCost + seatCost;
                 return total;
-            }
-        }
+            }  
+       } 
     }
 }

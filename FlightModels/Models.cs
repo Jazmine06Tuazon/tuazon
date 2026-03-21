@@ -14,6 +14,7 @@ namespace FlightModels
         public string Email { get; set; }
         public string Passport { get; set; }
         public string Payment { get; set; }
-        public int TotalCost { get; set; }
+        public int Total { get; set; }
+        public string Contact {  get; set; }
     }
 }

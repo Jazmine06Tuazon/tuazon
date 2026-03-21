@@ -13,8 +13,9 @@ namespace prog
         {
             int x = 250, y = 340;
             int bagTotal = 0;
-            int kg = 0;
+            int kg = 0, baggage = 0;
             int s = 150, premium = 250;
+            int seat = 0;
 
             Console.WriteLine("PASSENGER INFORMATION");
             Console.WriteLine(" ");
@@ -54,8 +55,23 @@ namespace prog
                 }
             }
 
-            Console.Write("Passport Number: ");
-            string passport = Console.ReadLine();
+
+            while (true)
+            {
+                Console.Write("Enter Passport Number (numbers only): ");
+                models.Passport = Console.ReadLine();
+
+                App valid = new App();
+                if (App.IsNumericOnly(models.Passport))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Only numbers are allowed and cannot be empty.");
+                }
+            }
+
             Console.WriteLine(" ");
 
             Console.WriteLine("FLIGHT DETAILS");
@@ -96,7 +112,7 @@ namespace prog
             while (true)
             {
                 Console.Write("Travel Dates: ");
-                models.Destination = Console.ReadLine();
+                models.Dates = Console.ReadLine();
 
                 App valid = new App();
                 if (App.IsInputEmpty(models.Dates))
@@ -122,10 +138,11 @@ namespace prog
                 }
                 else
                 {
-                    Console.WriteLine("This scetion cannot be empty.");
+                    Console.WriteLine("This section cannot be empty.");
                 }
             }
             Console.WriteLine(" ");
+
 
             Console.WriteLine("CONTACT INFORMATION");
             Console.WriteLine(" ");
@@ -149,11 +166,11 @@ namespace prog
 
             while (true)
             {
-                Console.Write("Enter Passport Number (numbers only): ");
-                models.Passport = Console.ReadLine();
+                Console.Write("Enter Contact Number (numbers only): ");
+                models.Contact = Console.ReadLine();
 
                 App valid = new App();
-                if (App.IsNumericOnly(passport))
+                if (App.IsNumericOnly(models.Contact))
                 {
                     break;
                 }
@@ -169,77 +186,70 @@ namespace prog
             Console.WriteLine(" ");
 
             Console.WriteLine("Baggage Allowance");
-            /*Console.WriteLine("Domestic flights:\n 1. Excess Baggage: ₱250-₱1,200 per kg \n 2. Prepaid Baggage ₱340-₱1,599");
-            Console.WriteLine("Choose: ");
-            int baggage = Convert.ToInt16(Console.ReadLine());
 
-            switch (baggage)
-            {
-                case 1:
-                    Console.Write("Enter kg: ");
-                    kg = Convert.ToInt16(Console.ReadLine());
-                    int p = x * kg;
-                    bagTotal += p;
-                    break;
-
-                case 2:
-                    Console.Write("Enter kg: ");
-                    kg = Convert.ToInt16(Console.ReadLine());
-                    int z = x * kg;
-                    bagTotal += z;
-                    break;
-            }
-            int bag = bagTotal;
-
-            Console.WriteLine(" ");
-
-            Console.WriteLine("Seat Selection");
-            Console.WriteLine("1. Standard seats: Php150 - Php280(domestic) \n 2. Premium seats: Php250 - Php1, 099(domestic)");
-            Console.WriteLine("Choose: ");
-            int seat = Convert.ToInt16(Console.ReadLine());
-            switch (seat)
-            {
-                case 1:
-                    bag += s;
-                    break;
-
-                case 2:
-                    bag += premium;
-                    break;
-            }
-            int total = bag;
-            Console.WriteLine(" ");
-
-            Console.WriteLine("Travel Insurance");
-
-            Console.WriteLine(" ");
-            Console.WriteLine("Domestic Flights:\n1. One - way base fare: Php 88 - Php 1,427.57\n2. Round - trip: Php2, 668.73\nInternational Flights:\n1.One - way base fare: Php 588 -₱1, 299\n2. Round - trip: Php2, 668.73\nPromo Fares:\n1. Piso Fare: Php 1.00 base fare(limited seats)\n2.P10 Seat Sale: Php10 one - way base fare");
-            */
 
             FlightService flightService = new FlightService();
 
+            while (true)
+            {
+                Console.WriteLine("Baggage Allowance");
+                Console.WriteLine("1. Excess Baggage: ₱250 per kg \n2. Prepaid Baggage: ₱340 per kg");
+                Console.Write("Enter your option [1/2]: ");
+                string input = Console.ReadLine();
 
-            int totalCost = flightService.CalculateTotal();
+                if (!int.TryParse(input, out baggage) || (baggage != 1 && baggage != 2))
+                {
+                    Console.WriteLine("Invalid choice. Enter 1 or 2");
+                    continue;
+                }
 
-            Console.WriteLine($"\nTotal Expenses for baggage and seat: {totalCost}");
+                while (true)
+                {
+                    Console.Write("Enter kg: ");
+                    string kgInput = Console.ReadLine();
+
+                    if (!int.TryParse(kgInput, out kg) || kg <= 0)
+                    {
+                        Console.WriteLine("Invalid kg. Enter a positive number.");
+                        continue;
+                    }
+                    break;
+                }
+                bagTotal = flightService.HandleBaggage(baggage, kg);
+                break;
+            }
+
+            while (true)
+            {
+                Console.WriteLine("\nSeat Selection:");
+                Console.WriteLine("1. Standard seats: Php150 - Php280\n2. Premium seats: Php250 - Php1,099");
+                Console.Write("Enter your option [1/2]: ");
+                string input = Console.ReadLine();
+
+                if (!int.TryParse(input, out seat) || (seat != 1 && seat != 2))
+                {
+                    Console.WriteLine("Invalid Choice.");
+                    continue;
+                }
+                break;
+            }
+
+            int seatCost = flightService.HandleSeat(seat);
+            int total = bagTotal + seatCost;
+
             Console.WriteLine(" ");
-
             Console.WriteLine("Payment Method (cash or online payment): ");
             string payment = Console.ReadLine();
+
+            models.Payment = payment;
+            models.Total = total;
+            
             Console.WriteLine(" ");
 
             Console.WriteLine("------ E-receipt -----");
-            /*Console.WriteLine("Customer's Name: " + models.Name);
-            Console.WriteLine("Customer's Passport: " + models.Passport);
-            Console.WriteLine("Customer's Departure City: " + models.Departure);
-            Console.WriteLine("Customer's Destination City: " + models.Destination);
-            Console.WriteLine("Travel Dates: " + models.Dates);
-           Console.WriteLine("Customer's Flight Type: " + models.Flight);*/
-
 
             PassengerData passengerData = new PassengerData();
             passengerData.AddPassenger(models);
-
 
             foreach (var p in passengerData.Passengers)
             {
@@ -250,10 +260,11 @@ namespace prog
                 Console.WriteLine("Travel Dates: " + p.Dates);
                 Console.WriteLine("Customer's Flight Type: " + p.Flight);
                 Console.WriteLine("Customer's Payment Method: " + p.Payment);
-                Console.WriteLine("Total Expenses for baggage and seat: " + p.TotalCost);
+                Console.WriteLine("Total Expenses for baggage and seat: " + p.Total);
                 Console.WriteLine();
                 Console.WriteLine("Process Completed. Thank you!");
             }
         }
     }
 }
+
