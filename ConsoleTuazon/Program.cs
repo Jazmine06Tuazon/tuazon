@@ -3,6 +3,7 @@ using FlightDataService;
 using FlightModels;
 using System;
 using System.ComponentModel.Design;
+using System.Xml.Linq;
 using static FlightAppService.App;
 
 namespace prog
@@ -19,6 +20,7 @@ namespace prog
 
             Console.WriteLine("PASSENGER INFORMATION");
             Console.WriteLine(" ");
+
 
             Models models = new Models();
 
@@ -250,6 +252,13 @@ namespace prog
 
             PassengerData passengerData = new PassengerData();
             passengerData.AddPassenger(models);
+
+            JsonData json = new JsonData();
+
+            json.SaveFlight(models);
+
+            var passengers = json.Flight();
+            
 
             foreach (var p in passengerData.Passengers)
             {

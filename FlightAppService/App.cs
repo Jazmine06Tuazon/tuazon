@@ -1,11 +1,13 @@
 ﻿
 using FlightModels;
 using System.IO.Pipes;
+using System.Text.Json.Serialization;
 namespace FlightAppService
 {
 
     public class App
     {
+        
         public static bool IsValidFullName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
