@@ -20,13 +20,19 @@ namespace FlightDataService
             PopulateJsonFile();       
         }
 
+        public void SaveFlight(Models newPassenger)
+        {
+            passenger.SavePassenger(newPassenger);
+            SaveData();
+        }
+
         private void PopulateJsonFile()
         {
             RetrieveDataFromJsonFile();
             
             if (passenger.Passengers.Count == 0)
             {
-                passenger.AddPassenger(new Models
+                passenger.SavePassenger(new Models
                 {
                     Name = "Jazmine",
                     Payment = "cash",
@@ -65,52 +71,16 @@ namespace FlightDataService
                 {
                     foreach (var item in data)
                     {
-                        passenger.AddPassenger(item);
+                        passenger.SavePassenger(item);
                     }
                 }
             }
         }
-        
-        public void SaveFlight(Models newPassenger)
-        {
-            passenger.AddPassenger(newPassenger);
-            SaveData(); 
-        }
 
-        public List<Models> Flight()
+        public void SavePassenger(Models passenger)
         {
-            RetrieveDataFromJsonFile();
-            return passenger.Passengers;
-        }
-
-        public void Add(Models models)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Models? GetByName(string Name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Models? GetByTotal(int Total)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool NameExists(string Name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Models models)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Models> GetModels()
-        {
-            throw new NotImplementedException();
+            SqlData db = new SqlData();
+            db.SavePassenger(passenger);
         }
     }
 }
