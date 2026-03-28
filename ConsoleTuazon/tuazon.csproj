@@ -13,4 +13,8 @@
     <ProjectReference Include="..\FlightModels\FlightModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
+
 </Project>

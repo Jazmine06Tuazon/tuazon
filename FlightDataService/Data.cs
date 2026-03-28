@@ -7,9 +7,14 @@ namespace FlightDataService
     {
         public List<Models> Passengers { get; private set; } = new List<Models>();
 
-        public void SavePassenger(Models passenger)
+        public void AddPassenger(Models passenger)
         {
             Passengers.Add(passenger);
+        }
+
+        public void SavePassenger(Models passenger)
+        {
+            throw new NotImplementedException();
         }
     }
 }

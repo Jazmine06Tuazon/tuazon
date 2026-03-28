@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace FlightDataService
 {
-    public class JsonData : IDataService
+    public class JsonData
     {
         private PassengerData passenger = new PassengerData();
 
@@ -16,23 +16,17 @@ namespace FlightDataService
         public JsonData()
         {
             json = $"{AppDomain.CurrentDomain.BaseDirectory}/PassengerData.json";
-            
-            PopulateJsonFile();       
-        }
 
-        public void SaveFlight(Models newPassenger)
-        {
-            passenger.SavePassenger(newPassenger);
-            SaveData();
+            PopulateJsonFile();
         }
 
         private void PopulateJsonFile()
         {
             RetrieveDataFromJsonFile();
-            
+
             if (passenger.Passengers.Count == 0)
             {
-                passenger.SavePassenger(new Models
+                passenger.AddPassenger(new Models
                 {
                     Name = "Jazmine",
                     Payment = "cash",
@@ -45,15 +39,19 @@ namespace FlightDataService
 
         private void SaveData()
         {
-            using (var outputStream = File.OpenWrite(json))
+            File.WriteAllText(json, JsonSerializer.Serialize(passenger.Passengers, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            }));
+            /*using (var outputStream = File.OpenWrite(json))
             {
                 JsonSerializer.Serialize<List<Models>>(
                    new Utf8JsonWriter(outputStream, new JsonWriterOptions
                    { SkipValidation = true, Indented = true })
                    , passenger.Passengers);
-            }
+            }*/
         }
-        
+
         private void RetrieveDataFromJsonFile()
         {
             if (!File.Exists(json))
@@ -67,20 +65,26 @@ namespace FlightDataService
             jsonFileReader.ReadToEnd(),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            if (data != null)
+                if (data != null)
                 {
                     foreach (var item in data)
                     {
-                        passenger.SavePassenger(item);
+                        passenger.AddPassenger(item);
                     }
                 }
             }
         }
 
-        public void SavePassenger(Models passenger)
+        public void SaveFlight(Models newPassenger)
         {
-            SqlData db = new SqlData();
-            db.SavePassenger(passenger);
+            passenger.AddPassenger(newPassenger);
+            SaveData();
+        }
+
+        public List<Models> Flight()
+        {
+            RetrieveDataFromJsonFile();
+            return passenger.Passengers;
         }
     }
 }

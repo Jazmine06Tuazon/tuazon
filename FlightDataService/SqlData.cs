@@ -17,6 +17,8 @@ namespace FlightDataService
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
+                con.Open();
+
                 string query = @"INSERT INTO Passengers
                                 (Name, Passport, Departure, Destination, Dates, Flight, Payment, Total)
                                 VALUES
@@ -33,7 +35,7 @@ namespace FlightDataService
                 cmd.Parameters.AddWithValue("@Payment", passenger.Payment);
                 cmd.Parameters.AddWithValue("@Total", passenger.Total);
                 cmd.Parameters.AddWithValue("@Nationality", passenger.Nationality);
-                con.Open();
+                
                 cmd.ExecuteNonQuery();
             }
         }

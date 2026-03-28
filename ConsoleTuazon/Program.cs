@@ -3,12 +3,12 @@ using FlightModels;
 using System;
 using System.ComponentModel.Design;
 using System.Xml.Linq;
+using static FlightDataService.App;
 
 namespace prog
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             int x = 250, y = 340;
@@ -28,6 +28,7 @@ namespace prog
                 Console.Write("Full Name: ");
                 models.Name = Console.ReadLine();
 
+                App valid = new App();
                 if (App.IsValidFullName(models.Name))
                 {
                     break;
@@ -44,7 +45,7 @@ namespace prog
                 Console.Write("Nationality: ");
                 models.Nationality = Console.ReadLine();
 
- 
+                App valid = new App();
                 if (App.IsValidFullName(models.Nationality))
                 {
                     break;
@@ -61,6 +62,7 @@ namespace prog
                 Console.Write("Enter Passport Number (numbers only): ");
                 models.Passport = Console.ReadLine();
 
+                App valid = new App();
                 if (App.IsNumericOnly(models.Passport))
                 {
                     break;
@@ -81,6 +83,7 @@ namespace prog
                 Console.Write("Departure City: ");
                 models.Departure = Console.ReadLine();
 
+                App valid = new App();
                 if (App.IsValidFullName(models.Departure))
                 {
                     break;
@@ -96,7 +99,7 @@ namespace prog
                 Console.Write("Destination City: ");
                 models.Destination = Console.ReadLine();
 
-              
+                App valid = new App();
                 if (App.IsValidFullName(models.Destination))
                 {
                     break;
@@ -112,7 +115,7 @@ namespace prog
                 Console.Write("Travel Dates: ");
                 models.Dates = Console.ReadLine();
 
-                
+                App valid = new App();
                 if (App.IsInputEmpty(models.Dates))
                 {
                     break;
@@ -129,7 +132,7 @@ namespace prog
                 Console.Write("Flight type (one-way or round-trip): ");
                 models.Flight = Console.ReadLine();
 
-           
+                App valid = new App();
                 if (App.IsInputEmpty(models.Flight))
                 {
                     break;
@@ -151,6 +154,7 @@ namespace prog
                 Console.Write("Email Address: ");
                 models.Email = Console.ReadLine();
 
+                App valid = new App();
                 if (App.IsInputEmpty(models.Email))
                 {
                     break;
@@ -166,6 +170,7 @@ namespace prog
                 Console.Write("Enter Contact Number (numbers only): ");
                 models.Contact = Console.ReadLine();
 
+                App valid = new App();
                 if (App.IsNumericOnly(models.Contact))
                 {
                     break;
@@ -184,7 +189,7 @@ namespace prog
             Console.WriteLine("Baggage Allowance");
 
 
-            App.FlightService flightService = new App.FlightService();
+            FlightService flightService = new FlightService();
 
             while (true)
             {
@@ -239,21 +244,19 @@ namespace prog
 
             models.Payment = payment;
             models.Total = total;
-            
+
             Console.WriteLine(" ");
 
             Console.WriteLine("------ E-receipt -----");
 
-            PassengerData passengerData = new PassengerData();
-          
-            SqlData dataService = new SqlData();
-            dataService.SavePassenger(models);
-            
-            App app = new App(dataService);
-            app.SaveBooking(models);
+            JsonData json = new JsonData();
 
-            passengerData.SavePassenger(models);
-            foreach (var p in passengerData.Passengers)
+            json.SaveFlight(models);
+
+            var passengers = json.Flight();
+
+
+            foreach (var p in passengers)
             {
                 Console.WriteLine("Customer's Name: " + p.Name);
                 Console.WriteLine("Customer's Passport: " + p.Passport);
