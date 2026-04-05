@@ -1,275 +1,197 @@
-﻿using FlightDataService;
-using FlightModels;
+﻿using FlightAppService;
+using FlightBookingModels;
 using System;
-using System.ComponentModel.Design;
-using System.Xml.Linq;
-using static FlightDataService.App;
+using System.Numerics;
 
-namespace prog
+namespace FlightBookingSystem
 {
-    internal class Program
+    class Program
     {
+        static AppService service = new AppService();
         static void Main(string[] args)
         {
-            int x = 250, y = 340;
-            int bagTotal = 0;
-            int kg = 0, baggage = 0;
-            int s = 150, premium = 250;
-            int seat = 0;
-
-            Console.WriteLine("PASSENGER INFORMATION");
-            Console.WriteLine(" ");
-
-
-            Models models = new Models();
 
             while (true)
             {
-                Console.Write("Full Name: ");
-                models.Name = Console.ReadLine();
 
-                App valid = new App();
-                if (App.IsValidFullName(models.Name))
+                Console.WriteLine("\n1. Add Booking");
+                Console.WriteLine("2. View Booking");
+                Console.WriteLine("3. Update Booking");
+                Console.WriteLine("4. Delete Booking");
+                Console.WriteLine("5. View All");
+                Console.WriteLine("6. Exit");
+
+                Console.WriteLine("Choice:");
+                string choice = Console.ReadLine();
+
+                try
                 {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid name.");
-                }
-            }
-
-
-            while (true)
-            {
-                Console.Write("Nationality: ");
-                models.Nationality = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsValidFullName(models.Nationality))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid.");
-                }
-            }
-
-
-            while (true)
-            {
-                Console.Write("Enter Passport Number (numbers only): ");
-                models.Passport = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsNumericOnly(models.Passport))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Only numbers are allowed and cannot be empty.");
-                }
-            }
-
-            Console.WriteLine(" ");
-
-            Console.WriteLine("FLIGHT DETAILS");
-            Console.WriteLine(" ");
-
-            while (true)
-            {
-                Console.Write("Departure City: ");
-                models.Departure = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsValidFullName(models.Departure))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid.");
-                }
-            }
-
-            while (true)
-            {
-                Console.Write("Destination City: ");
-                models.Destination = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsValidFullName(models.Destination))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid.");
-                }
-            }
-
-            while (true)
-            {
-                Console.Write("Travel Dates: ");
-                models.Dates = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsInputEmpty(models.Dates))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Travel Dates cannot be empty.");
-                }
-            }
-
-
-            while (true)
-            {
-                Console.Write("Flight type (one-way or round-trip): ");
-                models.Flight = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsInputEmpty(models.Flight))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("This section cannot be empty.");
-                }
-            }
-            Console.WriteLine(" ");
-
-
-            Console.WriteLine("CONTACT INFORMATION");
-            Console.WriteLine(" ");
-
-
-            while (true)
-            {
-                Console.Write("Email Address: ");
-                models.Email = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsInputEmpty(models.Email))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Email Address cannot be empty.");
-                }
-            }
-
-            while (true)
-            {
-                Console.Write("Enter Contact Number (numbers only): ");
-                models.Contact = Console.ReadLine();
-
-                App valid = new App();
-                if (App.IsNumericOnly(models.Contact))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Only numbers are allowed and cannot be empty.");
-                }
-            }
-
-            Console.WriteLine(" ");
-
-            Console.WriteLine("ADDITIONAL SERVICES");
-            Console.WriteLine(" ");
-
-            Console.WriteLine("Baggage Allowance");
-
-
-            FlightService flightService = new FlightService();
-
-            while (true)
-            {
-                Console.WriteLine("Baggage Allowance");
-                Console.WriteLine("1. Excess Baggage: ₱250 per kg \n2. Prepaid Baggage: ₱340 per kg");
-                Console.Write("Enter your option [1/2]: ");
-                string input = Console.ReadLine();
-
-                if (!int.TryParse(input, out baggage) || (baggage != 1 && baggage != 2))
-                {
-                    Console.WriteLine("Invalid choice. Enter 1 or 2");
-                    continue;
-                }
-
-                while (true)
-                {
-                    Console.Write("Enter kg: ");
-                    string kgInput = Console.ReadLine();
-
-                    if (!int.TryParse(kgInput, out kg) || kg <= 0)
+                    switch (choice)
                     {
-                        Console.WriteLine("Invalid kg. Enter a positive number.");
-                        continue;
+                        case "1":
+                            AddBooking();
+                            break;
+                        case "2":
+                            ViewBooking();
+                            break;
+
+                        case "3":
+                            UpdateBooking();
+                            break;
+
+                        case "4":
+                            DeleteBooking();
+                            break;
+
+                        case "5":
+                            ViewAll();
+                            break;
+
+                        case "6":
+                            return;
+
+                        default:
+                            Console.WriteLine("Invalid input.");
+                            break;
                     }
-                    break;
                 }
-                bagTotal = flightService.HandleBaggage(baggage, kg);
-                break;
-            }
-
-            while (true)
-            {
-                Console.WriteLine("\nSeat Selection:");
-                Console.WriteLine("1. Standard seats: Php150 - Php280\n2. Premium seats: Php250 - Php1,099");
-                Console.Write("Enter your option [1/2]: ");
-                string input = Console.ReadLine();
-
-                if (!int.TryParse(input, out seat) || (seat != 1 && seat != 2))
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Invalid Choice.");
-                    continue;
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
-                break;
-            }
-
-            int seatCost = flightService.HandleSeat(seat);
-            int total = bagTotal + seatCost;
-
-            Console.WriteLine(" ");
-            Console.WriteLine("Payment Method (cash or online payment): ");
-            string payment = Console.ReadLine();
-
-            models.Payment = payment;
-            models.Total = total;
-
-            Console.WriteLine(" ");
-
-            Console.WriteLine("------ E-receipt -----");
-
-            JsonData json = new JsonData();
-
-            json.SaveFlight(models);
-
-            var passengers = json.Flight();
-
-
-            foreach (var p in passengers)
-            {
-                Console.WriteLine("Customer's Name: " + p.Name);
-                Console.WriteLine("Customer's Passport: " + p.Passport);
-                Console.WriteLine("Customer's Departure City: " + p.Departure);
-                Console.WriteLine("Customer's Destination City: " + p.Destination);
-                Console.WriteLine("Travel Dates: " + p.Dates);
-                Console.WriteLine("Customer's Flight Type: " + p.Flight);
-                Console.WriteLine("Customer's Payment Method: " + p.Payment);
-                Console.WriteLine("Total Expenses for baggage and seat: " + p.Total);
-                Console.WriteLine();
-                Console.WriteLine("Process Completed. Thank you!");
             }
         }
+
+        static void AddBooking()
+        {
+            FlightModels b = new FlightModels();
+                b.PassportNumber = GetInput("Passport");
+                b.Name = GetInput("Name");
+                b.Nationality = GetInput("Nationality");
+                b.Departure = GetInput("Departure City");
+                b.Destination = GetInput("Destination City");
+                b.Date = GetInput("Travel Dates");
+                b.Type = GetInput("Flight Type [one-way or round-trip]");
+                Console.WriteLine(" ");
+                Console.WriteLine("----- Personal Information ----");
+
+                b.Contact = GetInput("Contact Number");
+                b.Email = GetInput("Email Address");
+
+
+                
+                    Console.Write("Baggage Kg: ");
+                    b.BaggageKg = int.Parse(Console.ReadLine());
+
+                    Console.WriteLine("1. Excess Baggage(200Php/kg)");
+                    Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
+
+                    string choice = Console.ReadLine();
+
+                    switch (choice)
+                    {
+                        case "1":
+                            b.BaggageType = "1";
+                            break;
+
+                        case "2":
+                            b.BaggageType = "2";
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid baggage type.");
+                            return;
+                    }
+                
+
+                service.CreateBooking(b);
+                Console.WriteLine("Added!");
+            }
+
+        static void ViewBooking()
+        {
+            string pass = GetInput("Passport");
+            var res = service.GetBooking(pass);
+
+            if (res != null)
+                Console.WriteLine($"Name: {res.Name}\nNationality {res.Nationality}\nDeparture: {res.Departure}\nDestination: {res.Destination}\nTravel Dates: {res.Date}\nTotal Cost: {res.TotalCost}");
+            else
+                Console.WriteLine("Not found.");
+        }
+
+        static void UpdateBooking()
+        {
+            FlightModels up = new FlightModels();
+
+            up.PassportNumber = GetInput("Passport");
+            up.Name = GetInput("Name");
+            up.Nationality = GetInput("Nationality");
+            up.Departure = GetInput("Departure City");
+            up.Destination = GetInput("Destination City");
+            up.Date = GetInput("Travel Dates");
+            up.Type = GetInput("Flight Type [one-way or round-trip");
+            Console.WriteLine(" ");
+            Console.WriteLine("----- Personal Information ----");
+
+            up.Contact = GetInput("Contact Number");
+            up.Email = GetInput("Email Address");
+
+            Console.Write("Baggage Kg: ");
+            up.BaggageKg = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("1. Excess Baggage(200Php/kg)");
+            Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    up.BaggageType = "excess";
+                    break;
+
+                case "2":
+                    up.BaggageType = "prepaid";
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid baggage type.");
+                    return;
+            }
+
+            service.UpdateBooking(up);
+            Console.WriteLine("Updated!");
+        }
+        static void DeleteBooking()
+        {
+            string del = GetInput("Passport");
+            service.DeleteBooking(del);
+            Console.WriteLine("Deleted!");
+        }
+
+        static void ViewAll()
+        {
+            var all = service.GetAllBookings();
+
+            foreach (var item in all)
+            {
+                Console.WriteLine($"{item.PassportNumber} - {item.Name} - {item.Destination}");
+            }
+        }
+        static string GetInput(string field)
+        {
+            string value;
+
+            do
+            {
+                Console.Write($"{field}: ");
+                value = Console.ReadLine();
+
+            } while (string.IsNullOrWhiteSpace(value));
+
+            return value;
+        }
+
+
     }
 }
-
