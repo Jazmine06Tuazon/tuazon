@@ -21,7 +21,7 @@ namespace FlightAppService
             Validate(booking.Name, "Name");
             Validate(booking.Destination, "Destination");
 
-            if (_repo.Get(booking.PassportNumber) != null)
+            if (_repo.GetPassport(booking.PassportNumber) != null)
                 throw new Exception("Booking already exists.");
 
             booking.TotalCost = CalculateBaggage(
@@ -36,7 +36,7 @@ namespace FlightAppService
         {
             Validate(passport, "Passport");
 
-            return _repo.Get(passport);
+            return _repo.GetPassport(passport);
         }
 
         public void UpdateBooking(FlightModels booking)
