@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace FlightDataService
 {
 
-    public class FlightJsonData
+    public class FlightJsonData : IFlightDataService
     {
 
 
@@ -55,7 +55,7 @@ namespace FlightDataService
         }
 
 
-         public void Add(FlightModels f)
+                    public void Add(FlightModels f)
                     {
                         flights.Add(f);
                         SaveData();
@@ -91,15 +91,17 @@ namespace FlightDataService
                         SaveData();
                     }
 
-                    public void Delete(string passport)
-                    {
-                        var item = flights.FirstOrDefault(x => x.PassportNumber == passport);
+        public void Delete(string passport)
+        {
+            var item = flights.FirstOrDefault(x => x.PassportNumber == passport);
 
-                        if (item != null)
-                        {
-                            flights.Remove(item);
-                            SaveData();
-                        }
-                    }
+            if (item != null)
+            {
+                flights.Remove(item);
+                SaveData();
+            }
         }
+
+        
+    }
 }

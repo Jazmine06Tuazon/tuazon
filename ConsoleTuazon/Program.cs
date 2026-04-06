@@ -78,10 +78,8 @@ namespace FlightBookingSystem
                 b.Contact = GetInput("Contact Number");
                 b.Email = GetInput("Email Address");
 
-
-                
-                    Console.Write("Baggage Kg: ");
-                    b.BaggageKg = int.Parse(Console.ReadLine());
+                Console.WriteLine("Baggage kg: ");
+                string BaggageKg = Console.ReadLine();
 
                     Console.WriteLine("1. Excess Baggage(200Php/kg)");
                     Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
@@ -103,7 +101,6 @@ namespace FlightBookingSystem
                             return;
                     }
                 
-
                 service.CreateBooking(b);
                 Console.WriteLine("Added!");
             }
@@ -136,8 +133,8 @@ namespace FlightBookingSystem
             up.Contact = GetInput("Contact Number");
             up.Email = GetInput("Email Address");
 
-            Console.Write("Baggage Kg: ");
-            up.BaggageKg = int.Parse(Console.ReadLine());
+            Console.WriteLine("Baggage kg: ");
+            string BaggageKg = Console.ReadLine();
 
             Console.WriteLine("1. Excess Baggage(200Php/kg)");
             Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
@@ -147,11 +144,11 @@ namespace FlightBookingSystem
             switch (choice)
             {
                 case "1":
-                    up.BaggageType = "excess";
+                    up.BaggageType = "1";
                     break;
 
                 case "2":
-                    up.BaggageType = "prepaid";
+                    up.BaggageType = "2";
                     break;
 
                 default:
@@ -191,6 +188,22 @@ namespace FlightBookingSystem
 
             return value;
         }
+
+       /* static int GetNumberInput(string field)
+        {
+            int value;
+
+            while (true)
+            {
+                Console.Write($"{field}: ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out value) && value >= 0)
+                    return value;
+
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+            }
+        }*/
 
 
     }

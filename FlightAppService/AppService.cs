@@ -7,22 +7,30 @@ namespace FlightAppService
 {
     public class AppService
     {
-        private FlightJsonData _repo = new FlightJsonData();
+        private IFlightDataService _repo;
+
+        public AppService()
+        {
+            _repo = new FlightJsonData();
+        }
+
 
         private void Validate(string value, string field)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new Exception($"{field} cannot be empty.");
+
         }
 
         public void CreateBooking(FlightModels booking)
         {
+
             Validate(booking.PassportNumber, "Passport");
             Validate(booking.Name, "Name");
             Validate(booking.Destination, "Destination");
 
             if (_repo.GetPassport(booking.PassportNumber) != null)
-                throw new Exception("Booking already exists.");
+                throw new Exception("Booking already exixsts.");
 
             booking.TotalCost = CalculateBaggage(
             booking.BaggageKg,
@@ -41,6 +49,13 @@ namespace FlightAppService
 
         public void UpdateBooking(FlightModels booking)
         {
+            Validate(booking.PassportNumber, "Passport");
+            Validate(booking.Name, "Name");
+            Validate(booking.Destination, "Destination");
+
+            if (_repo.GetPassport(booking.PassportNumber) != null)
+                throw new Exception("Booking already exists.");
+
             booking.TotalCost = CalculateBaggage(
             booking.BaggageKg,
             booking.BaggageType

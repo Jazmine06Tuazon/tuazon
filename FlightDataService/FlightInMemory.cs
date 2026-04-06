@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace FlightDataService
-{
-    public class DataService
+{ 
+    public class FlightInMemory 
     {
         public List<FlightModels> bookings = new List<FlightModels>();
 
@@ -13,7 +13,7 @@ namespace FlightDataService
             bookings.Add(booking);
         }
 
-        public FlightModels GetByPassport(string passport)
+        public FlightModels GetbyPassport(string passport)
         {
             return bookings.FirstOrDefault(b => b.PassportNumber == passport);
         }
@@ -25,7 +25,7 @@ namespace FlightDataService
 
         public void Update(FlightModels booking)
         {
-            var existing = GetByPassport(booking.PassportNumber);
+            var existing = GetbyPassport(booking.PassportNumber);
 
             if (existing != null)
             {
@@ -38,7 +38,7 @@ namespace FlightDataService
 
         public void Delete(string passport)
         {
-            var booking = GetByPassport(passport);
+            var booking = GetbyPassport(passport);
 
             if (booking != null)
             {
