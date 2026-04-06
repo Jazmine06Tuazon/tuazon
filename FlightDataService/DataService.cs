@@ -6,10 +6,10 @@ using System.Text;
 
 namespace FlightDataService
 {
-    public class FlightDataService
+    public class DataService
     {
         IFlightDataService _flightDataService;
-        public FlightDataService(IFlightDataService flightDataService)
+        public DataService(IFlightDataService flightDataService)
         {
             _flightDataService = flightDataService;
         }

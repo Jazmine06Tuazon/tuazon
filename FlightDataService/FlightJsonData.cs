@@ -34,14 +34,16 @@ namespace FlightDataService
 
         private void SaveData()
         {
-            using (var outputStream = File.OpenWrite(jsonFile))
+            var x = new JsonSerializerOptions
             {
-                    JsonSerializer.Serialize<List<FlightModels>>(
-                    new Utf8JsonWriter(outputStream, new JsonWriterOptions
-                    { SkipValidation = true, Indented = true })
-                    , flights);
-            }
+                WriteIndented = true
+            };
+
+            string json = JsonSerializer.Serialize(flights, x);
+
+            System.IO.File.WriteAllText(jsonFile, json);
         }
+
 
         private void RetrieveData()
         {

@@ -13,7 +13,6 @@
         public string Type { get; set; }
         public string Email { get; set; }
         public string Contact { get; set; }
-        public double BaggageFee { get; set; }
         public string BaggageType { get; set; }
     }
 }

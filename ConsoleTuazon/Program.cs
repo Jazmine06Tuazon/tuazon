@@ -64,7 +64,8 @@ namespace FlightBookingSystem
 
         static void AddBooking()
         {
-            FlightModels b = new FlightModels();
+                FlightModels b = new FlightModels();
+
                 b.PassportNumber = GetInput("Passport");
                 b.Name = GetInput("Name");
                 b.Nationality = GetInput("Nationality");
@@ -79,7 +80,7 @@ namespace FlightBookingSystem
                 b.Email = GetInput("Email Address");
 
                 Console.WriteLine("Baggage kg: ");
-                string BaggageKg = Console.ReadLine();
+                b.BaggageKg = Convert.ToInt32(Console.ReadLine());
 
                     Console.WriteLine("1. Excess Baggage(200Php/kg)");
                     Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
@@ -134,7 +135,7 @@ namespace FlightBookingSystem
             up.Email = GetInput("Email Address");
 
             Console.WriteLine("Baggage kg: ");
-            string BaggageKg = Console.ReadLine();
+            up.BaggageKg = Convert.ToInt32(Console.ReadLine());
 
             Console.WriteLine("1. Excess Baggage(200Php/kg)");
             Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
