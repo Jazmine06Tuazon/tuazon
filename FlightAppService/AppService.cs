@@ -7,14 +7,7 @@ namespace FlightAppService
 {
     public class AppService
     {
-        //DataService flightDataService = new DataService(new FlightInMemory());
-        
-        private IFlightDataService _repo;
-
-        public AppService()
-        {
-            _repo = new FlightJsonData();
-        }
+        DataService _repo = new DataService(new FlightJsonData());
 
         private void Validate(string value, string field)
         {

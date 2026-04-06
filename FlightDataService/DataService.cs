@@ -21,7 +21,7 @@ namespace FlightDataService
 
         public FlightModels? GetPassport(string passport)
         {
-            return _flightDataService.GetPassport(passport);
+            return _flightDataService.GetbyPassport(passport);
         }
 
         public void Update(FlightModels flightModels)

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FlightDataService
+namespace FlightDataService 
 { 
-    public class FlightInMemory 
+    public class FlightInMemory : IFlightDataService
     {
         public List<FlightModels> bookings = new List<FlightModels>();
 

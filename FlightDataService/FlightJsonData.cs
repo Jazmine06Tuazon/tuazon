@@ -8,7 +8,6 @@ namespace FlightDataService
     public class FlightJsonData : IFlightDataService
     {
 
-
         private List<FlightModels> flights = new List<FlightModels>();
 
         private string jsonFile;
@@ -57,23 +56,23 @@ namespace FlightDataService
         }
 
 
-                    public void Add(FlightModels f)
+        public void Add(FlightModels f)
                     {
                         flights.Add(f);
                         SaveData();
                     }
 
-                    public FlightModels GetPassport(string passport)
-                    {
+        public FlightModels GetbyPassport(string passport)
+             {
                         return flights.FirstOrDefault(x => x.PassportNumber == passport);
                     }
 
-                    public List<FlightModels> GetAll()
+        public List<FlightModels> GetAll()
                     {
                         return flights;
                     }
 
-                    public void Update(FlightModels updated)
+         public void Update(FlightModels updated)
                     {
                         var existing = flights.FirstOrDefault(x => x.PassportNumber == updated.PassportNumber);
 
