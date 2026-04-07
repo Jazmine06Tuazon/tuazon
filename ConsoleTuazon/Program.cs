@@ -7,9 +7,20 @@ namespace FlightBookingSystem
 {
     class Program
     {
-        static AppService service = new AppService();
+        static AppService service;
         static void Main(string[] args)
         {
+            try
+            {
+                service = new AppService();
+                service.SeedDataIfEmpty();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error initializing AppService:");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException?.Message);
+            }
 
             while (true)
             {
@@ -102,7 +113,7 @@ namespace FlightBookingSystem
                             return;
                     }
                 
-                service.CreateBooking(b);
+                service.Add(b);
                 Console.WriteLine("Added!");
             }
 
@@ -112,11 +123,15 @@ namespace FlightBookingSystem
             var res = service.GetBooking(pass);
 
             if (res != null)
+            {
                 Console.WriteLine($"Name: {res.Name}\nNationality {res.Nationality}\nDeparture: {res.Departure}\nDestination: {res.Destination}\nTravel Dates: {res.Date}\nTotal Cost: {res.TotalCost}");
+            }
             else
+            {
                 Console.WriteLine("Not found.");
+            }
         }
-
+                
         static void UpdateBooking()
         {
             FlightModels up = new FlightModels();
@@ -157,13 +172,13 @@ namespace FlightBookingSystem
                     return;
             }
 
-            service.UpdateBooking(up);
+            service.Update(up);
             Console.WriteLine("Updated!");
         }
         static void DeleteBooking()
         {
             string del = GetInput("Passport");
-            service.DeleteBooking(del);
+            service.Delete(del);
             Console.WriteLine("Deleted!");
         }
 

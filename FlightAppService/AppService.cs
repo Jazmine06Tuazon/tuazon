@@ -7,8 +7,18 @@ namespace FlightAppService
 {
     public class AppService
     {
-        DataService _repo = new DataService(new FlightJsonData());
+        //DataService _repo = new DataService(new FlightJsonData());
+        private FlightDBData _repo;
 
+        public AppService()
+        {
+             _repo = new FlightDBData();
+        }
+        public void SeedDataIfEmpty()
+        {
+            _repo.AddSeeds();
+        }
+        
         private void Validate(string value, string field)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -16,14 +26,14 @@ namespace FlightAppService
 
         }
 
-        public void CreateBooking(FlightModels booking)
+        public void Add(FlightModels booking)
         {
 
             Validate(booking.PassportNumber, "Passport");
             Validate(booking.Name, "Name");
             Validate(booking.Destination, "Destination");
 
-            if (_repo.GetPassport(booking.PassportNumber) != null)
+            if (_repo.GetbyPassport(booking.PassportNumber) != null)
                 throw new Exception("Booking already exixsts.");
 
             booking.TotalCost = CalculateBaggage(
@@ -38,16 +48,16 @@ namespace FlightAppService
         {
             Validate(passport, "Passport");
 
-            return _repo.GetPassport(passport);
+            return _repo.GetbyPassport(passport);
         }
 
-        public void UpdateBooking(FlightModels booking)
+        public void Update(FlightModels booking)
         {
             Validate(booking.PassportNumber, "Passport");
             Validate(booking.Name, "Name");
             Validate(booking.Destination, "Destination");
 
-            if (_repo.GetPassport(booking.PassportNumber) != null)
+            if (_repo.GetbyPassport(booking.PassportNumber) != null)
                 throw new Exception("Booking already exists.");
 
             booking.TotalCost = CalculateBaggage(
@@ -58,7 +68,7 @@ namespace FlightAppService
             _repo.Update(booking);
         }
 
-        public void DeleteBooking(string passport)
+        public void Delete(string passport)
         {
             _repo.Delete(passport);
         }
