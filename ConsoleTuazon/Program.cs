@@ -68,7 +68,7 @@ namespace FlightBookingSystem
             b.Name = GetInput("Name");
             b.Gender = GetInput("Gender");
             b.Nationality = GetInput("Nationality");
-            b.Age = GetInput("Age");
+            b.Age = GetNumericInput("Age");
             b.BirthDate = GetInput("Birth Date");
 
             Console.WriteLine(" ");
@@ -82,21 +82,20 @@ namespace FlightBookingSystem
             Console.WriteLine("----- Contact Information ----");
 
             b.Contact = GetInput("Contact Number");
-            b.Email = GetInput("Email Address");
-
+            b.Email = GetEmail();
             Console.WriteLine(" ");
             Console.WriteLine("1. Excess Baggage(200Php/kg)");
             Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
+         
+            int choice = GetNumericInput("Choice");
 
-                string choice = Console.ReadLine();
-
-                switch (choice)
+            switch (choice)
                     {
-                        case "1":
+                        case 1:
                             b.BaggageType = "1";
                             break;
 
-                        case "2":
+                        case 2:
                             b.BaggageType = "2";
                             break;
 
@@ -105,7 +104,7 @@ namespace FlightBookingSystem
                             return;
                     }
 
-            Console.WriteLine("Baggage kg: ");
+            Console.Write("Baggage kg: ");
             b.BaggageKg = Convert.ToInt32(Console.ReadLine());
 
             service.Add(b);
@@ -119,7 +118,7 @@ namespace FlightBookingSystem
 
             if (res != null)
             {
-                Console.WriteLine($"Name: {res.Name}\nGender: {res.Gender}\nNationality {res.Nationality}\nAge: {res.Age}\nBirth Date: {res.BirthDate}\nDeparture: {res.Departure}\nDestination: {res.Destination}\nTravel Dates: {res.Date}\nFlight Type: {res.Type}\nTotal Cost: {res.TotalCost}");
+                Console.WriteLine($"Name: {res.Name}\nGender: {res.Gender}\nNationality {res.Nationality}\nAge: {res.Age}\nBirth Date: {res.BirthDate}\nDeparture: {res.Departure}\nDestination: {res.Destination}\nTravel Dates: {res.Date}\nFlight Type: {res.Type}\nEmail: {res.Email}\nContact Number: {res.Contact}\nTotal Cost: {res.TotalCost}");
             }
             else
             {
@@ -146,7 +145,7 @@ namespace FlightBookingSystem
                 up.Name = GetInput("Name");
                 up.Gender = GetInput("Gender");
                 up.Nationality = GetInput("Nationality");
-                up.Age = GetInput("Age");
+                up.Age = GetNumericInput("Age");
                 up.BirthDate = GetInput("Birth Date");
 
                 Console.WriteLine(" ");
@@ -159,21 +158,21 @@ namespace FlightBookingSystem
                 Console.WriteLine(" ");
                 Console.WriteLine("----- Contact Information ----");
                 up.Contact = GetInput("Contact Number");
-                up.Email = GetInput("Email Address");
+                up.Email = GetEmail();
 
                 Console.WriteLine(" ");
                 Console.WriteLine("1. Excess Baggage(200Php/kg)");
                 Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
-
-                string choice = Console.ReadLine();
+            
+                int choice = GetNumericInput("Choice");
 
                 switch (choice)
                 {
-                    case "1":
+                    case 1:
                         up.BaggageType = "1";
                         break;
 
-                    case "2":
+                    case 2:
                         up.BaggageType = "2";
                         break;
 
@@ -183,7 +182,7 @@ namespace FlightBookingSystem
                 }
 
 
-                Console.WriteLine("Baggage kg: ");
+                Console.Write("Baggage kg: ");
                 up.BaggageKg = Convert.ToInt32(Console.ReadLine());
 
                 service.Update(up);
@@ -214,7 +213,7 @@ namespace FlightBookingSystem
         {
             string value;
 
-            Regex regex = new Regex(@"^[a-zA-Z0-9 ]+$"); 
+            Regex regex = new Regex(@"^[a-zA-Z0-9 \-]+$"); 
 
             do
             {
@@ -230,7 +229,60 @@ namespace FlightBookingSystem
                 if (!regex.IsMatch(value))
                 {
                     Console.WriteLine("No special characters allowed. Try again.");
-                    value = null; 
+                    continue;
+                }
+                return value;
+
+            } while (true);
+
+           
+        }
+
+        static int GetNumericInput(string field)
+        {
+            string value;
+
+            do
+            {
+                Console.Write($"{field}: ");
+                value = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Console.WriteLine("Input cannot be empty.");
+                    continue;
+                }
+
+                if (!value.All(char.IsDigit))
+                {
+                    Console.WriteLine("Only numbers are allowed.");
+                    value = null;
+                }
+
+            } while (value == null);
+
+            return int.Parse(value);
+        }
+
+        static string GetEmail()
+        {
+            string value;
+            Regex emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+            do
+            {
+                Console.Write("Email: ");
+                value = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Console.WriteLine("Email cannot be empty.");
+                    value = null;
+                }
+                else if (!emailRegex.IsMatch(value))
+                {
+                    Console.WriteLine("Invalid email format. Try again.");
+                    value = null;
                 }
 
             } while (value == null);

@@ -21,7 +21,6 @@ namespace FlightDataService
 
         public void AddSeeds()
         {
-            
                 var existing = GetAll();
                 if (existing.Count == 0)
                 {
@@ -54,7 +53,7 @@ namespace FlightDataService
             cmd.Parameters.AddWithValue("@Email", flightModels.Email ?? "");
             cmd.Parameters.AddWithValue("@TotalCost", flightModels.TotalCost);
             cmd.Parameters.AddWithValue("@BaggageKg", flightModels.BaggageKg);
-            cmd.Parameters.AddWithValue("@BaggageType", flightModels.BaggageType ?? "");
+            cmd.Parameters.AddWithValue("@BaggageType", flightModels.BaggageType);
             cmd.Parameters.AddWithValue("@Age", flightModels.Age);
             cmd.Parameters.AddWithValue("@Gender", flightModels.Gender ?? "");
             cmd.Parameters.AddWithValue("@BirthDate", flightModels.BirthDate ?? "");
@@ -94,7 +93,7 @@ namespace FlightDataService
                     PassportNumber = reader["PassportNumber"].ToString(),
                     Name = reader["Name"].ToString(),
                     Destination = reader["Destination"].ToString(),
-                    BaggageKg = Convert.ToInt32(reader["BaggageKg"]),
+                    BaggageKg = reader["BaggageKg"] == DBNull.Value ? 0 : Convert.ToInt32(reader["BaggageKg"]),
                     TotalCost = Convert.ToDouble(reader["TotalCost"]),
                     Departure = reader["Departure"].ToString(),
                     Nationality = reader["Nationality"].ToString(),
@@ -103,7 +102,7 @@ namespace FlightDataService
                     Email = reader["Email"].ToString(),
                     Contact = reader["Contact"].ToString(),
                     BaggageType = reader["BaggageType"].ToString(),
-                    Age = reader["Age"].ToString(),
+                    Age = reader["Age"] == DBNull.Value ? 0 : Convert.ToInt32(reader["Age"]),
                     Gender = reader["Gender"].ToString(),
                     BirthDate = reader["BirthDate"].ToString()
                 });
@@ -132,7 +131,7 @@ namespace FlightDataService
                     PassportNumber = reader["PassportNumber"].ToString(),
                     Name = reader["Name"].ToString(),
                     Destination = reader["Destination"].ToString(),
-                    BaggageKg = Convert.ToInt32(reader["BaggageKg"]),
+                    BaggageKg = reader["BaggageKg"] == DBNull.Value ? 0 : Convert.ToInt32(reader["BaggageKg"]),
                     TotalCost = Convert.ToDouble(reader["TotalCost"]),
                     Departure = reader["Departure"].ToString(),
                     Nationality = reader["Nationality"].ToString(),
@@ -141,7 +140,7 @@ namespace FlightDataService
                     Email = reader["Email"].ToString(),
                     Contact = reader["Contact"].ToString(),
                     BaggageType = reader["BaggageType"].ToString(),
-                    Age = reader["Age"].ToString(),
+                    Age = reader["Age"] == DBNull.Value ? 0 : Convert.ToInt32(reader["Age"]),
                     Gender = reader["Gender"].ToString(),
                     BirthDate = reader["BirthDate"].ToString()
                 };

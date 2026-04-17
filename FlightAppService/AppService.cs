@@ -25,7 +25,6 @@ namespace FlightAppService
             Validate(booking.Date, "Travel Dates");
             Validate(booking.Email, "Email");
             Validate(booking.Gender, "Gender");
-            Validate(booking.Age, "Age");
             Validate(booking.Type, "Flight Type [one-way or round-trip]");
 
             if (_repo.GetbyPassport(booking.PassportNumber) != null)
@@ -56,7 +55,6 @@ namespace FlightAppService
             Validate(booking.Date, "Travel Dates");
             Validate(booking.Email, "Email");
             Validate(booking.Gender, "Gender");
-            Validate(booking.Age, "Age");
             Validate(booking.Type, "Flight Type [one-way or round-trip]");
 
             if (_repo.GetbyPassport(booking.PassportNumber) == null)
