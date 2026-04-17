@@ -8,15 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="data\**" />
-    <EmbeddedResource Remove="data\**" />
-    <None Remove="data\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FlightAppService\FlightAppService.csproj" />
     <ProjectReference Include="..\FlightDataService\FlightDataService.csproj" />
     <ProjectReference Include="..\FlightModels\FlightModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

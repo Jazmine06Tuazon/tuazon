@@ -19,7 +19,7 @@ namespace FlightDataService
             _flightDataService.Add(flightModels);
         }
 
-        public FlightModels? GetPassport(string passport)
+        public FlightModels? GetbyPassport(string passport)
         {
             return _flightDataService.GetbyPassport(passport);
         }

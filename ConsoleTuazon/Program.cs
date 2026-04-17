@@ -2,26 +2,16 @@
 using FlightBookingModels;
 using System;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace FlightBookingSystem
 {
     class Program
     {
-        static AppService service;
+        static AppService service = new AppService();
         static void Main(string[] args)
         {
-            try
-            {
-                service = new AppService();
-                service.SeedDataIfEmpty();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error initializing AppService:");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException?.Message);
-            }
-
+           
             while (true)
             {
 
@@ -35,8 +25,7 @@ namespace FlightBookingSystem
                 Console.WriteLine("Choice:");
                 string choice = Console.ReadLine();
 
-                try
-                {
+                
                     switch (choice)
                     {
                         case "1":
@@ -65,40 +54,43 @@ namespace FlightBookingSystem
                             Console.WriteLine("Invalid input.");
                             break;
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
             }
         }
 
         static void AddBooking()
         {
-                FlightModels b = new FlightModels();
+            FlightModels b = new FlightModels();
 
-                b.PassportNumber = GetInput("Passport");
-                b.Name = GetInput("Name");
-                b.Nationality = GetInput("Nationality");
-                b.Departure = GetInput("Departure City");
-                b.Destination = GetInput("Destination City");
-                b.Date = GetInput("Travel Dates");
-                b.Type = GetInput("Flight Type [one-way or round-trip]");
-                Console.WriteLine(" ");
-                Console.WriteLine("----- Personal Information ----");
+            b.PassportNumber = GetInput("Passport");
+            Console.WriteLine(" ");
 
-                b.Contact = GetInput("Contact Number");
-                b.Email = GetInput("Email Address");
+            Console.WriteLine("---- Personal Information ----");
+            b.Name = GetInput("Name");
+            b.Gender = GetInput("Gender");
+            b.Nationality = GetInput("Nationality");
+            b.Age = GetInput("Age");
+            b.BirthDate = GetInput("Birth Date");
 
-                Console.WriteLine("Baggage kg: ");
-                b.BaggageKg = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine(" ");
+            Console.WriteLine("---- Flight Details ------");
+            b.Departure = GetInput("Departure City");
+            b.Destination = GetInput("Destination City");
+            b.Date = GetInput("Travel Dates");
+            b.Type = GetInput("Flight Type [one-way or round-trip]");
 
-                    Console.WriteLine("1. Excess Baggage(200Php/kg)");
-                    Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
+            Console.WriteLine(" ");
+            Console.WriteLine("----- Contact Information ----");
 
-                    string choice = Console.ReadLine();
+            b.Contact = GetInput("Contact Number");
+            b.Email = GetInput("Email Address");
 
-                    switch (choice)
+            Console.WriteLine(" ");
+            Console.WriteLine("1. Excess Baggage(200Php/kg)");
+            Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
                     {
                         case "1":
                             b.BaggageType = "1";
@@ -112,9 +104,12 @@ namespace FlightBookingSystem
                             Console.WriteLine("Invalid baggage type.");
                             return;
                     }
-                
-                service.Add(b);
-                Console.WriteLine("Added!");
+
+            Console.WriteLine("Baggage kg: ");
+            b.BaggageKg = Convert.ToInt32(Console.ReadLine());
+
+            service.Add(b);
+            Console.WriteLine("Added!");
             }
 
         static void ViewBooking()
@@ -124,7 +119,7 @@ namespace FlightBookingSystem
 
             if (res != null)
             {
-                Console.WriteLine($"Name: {res.Name}\nNationality {res.Nationality}\nDeparture: {res.Departure}\nDestination: {res.Destination}\nTravel Dates: {res.Date}\nTotal Cost: {res.TotalCost}");
+                Console.WriteLine($"Name: {res.Name}\nGender: {res.Gender}\nNationality {res.Nationality}\nAge: {res.Age}\nBirth Date: {res.BirthDate}\nDeparture: {res.Departure}\nDestination: {res.Destination}\nTravel Dates: {res.Date}\nFlight Type: {res.Type}\nTotal Cost: {res.TotalCost}");
             }
             else
             {
@@ -134,46 +129,70 @@ namespace FlightBookingSystem
                 
         static void UpdateBooking()
         {
-            FlightModels up = new FlightModels();
-
-            up.PassportNumber = GetInput("Passport");
-            up.Name = GetInput("Name");
-            up.Nationality = GetInput("Nationality");
-            up.Departure = GetInput("Departure City");
-            up.Destination = GetInput("Destination City");
-            up.Date = GetInput("Travel Dates");
-            up.Type = GetInput("Flight Type [one-way or round-trip");
-            Console.WriteLine(" ");
-            Console.WriteLine("----- Personal Information ----");
-
-            up.Contact = GetInput("Contact Number");
-            up.Email = GetInput("Email Address");
-
-            Console.WriteLine("Baggage kg: ");
-            up.BaggageKg = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("1. Excess Baggage(200Php/kg)");
-            Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
-
-            string choice = Console.ReadLine();
-
-            switch (choice)
+            try
             {
-                case "1":
-                    up.BaggageType = "1";
-                    break;
+                FlightModels up = new FlightModels();
 
-                case "2":
-                    up.BaggageType = "2";
-                    break;
+                string pass = GetInput("Passport");
 
-                default:
-                    Console.WriteLine("Invalid baggage type.");
-                    return;
+                var existing = service.GetBooking(pass);
+
+                if (existing == null)
+                {
+                    Console.WriteLine("Booking does not exist or has been deleted.");
+                    return; 
+                }
+                up.PassportNumber = pass;
+                up.Name = GetInput("Name");
+                up.Gender = GetInput("Gender");
+                up.Nationality = GetInput("Nationality");
+                up.Age = GetInput("Age");
+                up.BirthDate = GetInput("Birth Date");
+
+                Console.WriteLine(" ");
+                Console.WriteLine("----- Flight Details -----");
+                up.Departure = GetInput("Departure City");
+                up.Destination = GetInput("Destination City");
+                up.Date = GetInput("Travel Dates");
+                up.Type = GetInput("Flight Type [one-way or round-trip");
+
+                Console.WriteLine(" ");
+                Console.WriteLine("----- Contact Information ----");
+                up.Contact = GetInput("Contact Number");
+                up.Email = GetInput("Email Address");
+
+                Console.WriteLine(" ");
+                Console.WriteLine("1. Excess Baggage(200Php/kg)");
+                Console.WriteLine("2. Prepaid Baggage(300Php/kg)");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        up.BaggageType = "1";
+                        break;
+
+                    case "2":
+                        up.BaggageType = "2";
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid baggage type.");
+                        return;
+                }
+
+
+                Console.WriteLine("Baggage kg: ");
+                up.BaggageKg = Convert.ToInt32(Console.ReadLine());
+
+                service.Update(up);
+                Console.WriteLine("Booking updated successfully!");
             }
-
-            service.Update(up);
-            Console.WriteLine("Updated!");
+            catch (Exception ex) 
+            { 
+                Console.WriteLine(ex.Message);
+            }
         }
         static void DeleteBooking()
         {
@@ -188,39 +207,35 @@ namespace FlightBookingSystem
 
             foreach (var item in all)
             {
-                Console.WriteLine($"{item.PassportNumber} - {item.Name} - {item.Destination}");
+                Console.WriteLine($"{item.PassportNumber} - {item.Name} - {item.Destination} - {item.Departure} - {item.TotalCost}");
             }
         }
         static string GetInput(string field)
         {
             string value;
 
+            Regex regex = new Regex(@"^[a-zA-Z0-9 ]+$"); 
+
             do
             {
                 Console.Write($"{field}: ");
                 value = Console.ReadLine();
 
-            } while (string.IsNullOrWhiteSpace(value));
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Console.WriteLine("Input cannot be empty.");
+                    continue;
+                }
+
+                if (!regex.IsMatch(value))
+                {
+                    Console.WriteLine("No special characters allowed. Try again.");
+                    value = null; 
+                }
+
+            } while (value == null);
 
             return value;
         }
-
-       /* static int GetNumberInput(string field)
-        {
-            int value;
-
-            while (true)
-            {
-                Console.Write($"{field}: ");
-                string input = Console.ReadLine();
-
-                if (int.TryParse(input, out value) && value >= 0)
-                    return value;
-
-                Console.WriteLine("Invalid input. Please enter a valid number.");
-            }
-        }*/
-
-
     }
 }

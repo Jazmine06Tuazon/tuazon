@@ -16,6 +16,7 @@ namespace FlightDataService
         public FlightDBData()
         {
              sqlConnection = new SqlConnection(connection);
+             AddSeeds();
         }
 
         public void AddSeeds()
@@ -37,8 +38,8 @@ namespace FlightDataService
         public void Add(FlightModels flightModels)
         {
             var insertStatement = @"INSERT INTO Flight
-    (PassportNumber, Name, Nationality, Departure, Destination, Date, Type, Contact, Email, TotalCost, BaggageKg, BaggageType) 
-    VALUES (@PassportNumber, @Name, @Nationality, @Departure, @Destination, @Date, @Type, @Contact, @Email, @TotalCost, @BaggageKg, @BaggageType)";
+    (PassportNumber, Name, Nationality, Departure, Destination, [Date], [Type], Contact, Email, TotalCost, BaggageKg, BaggageType, Age, Gender, BirthDate) 
+    VALUES (@PassportNumber, @Name, @Nationality, @Departure, @Destination, @Date, @Type, @Contact, @Email, @TotalCost, @BaggageKg, @BaggageType, @Age, @Gender, @BirthDate)";
 
             SqlCommand cmd = new SqlCommand(insertStatement, sqlConnection);
 
@@ -54,6 +55,9 @@ namespace FlightDataService
             cmd.Parameters.AddWithValue("@TotalCost", flightModels.TotalCost);
             cmd.Parameters.AddWithValue("@BaggageKg", flightModels.BaggageKg);
             cmd.Parameters.AddWithValue("@BaggageType", flightModels.BaggageType ?? "");
+            cmd.Parameters.AddWithValue("@Age", flightModels.Age);
+            cmd.Parameters.AddWithValue("@Gender", flightModels.Gender ?? "");
+            cmd.Parameters.AddWithValue("@BirthDate", flightModels.BirthDate ?? "");
 
             sqlConnection.Open();
             cmd.ExecuteNonQuery();
@@ -85,7 +89,7 @@ namespace FlightDataService
 
             while (reader.Read())
             {
-                flights.Add(new FlightModels() 
+                flights.Add(new FlightModels()
                 {
                     PassportNumber = reader["PassportNumber"].ToString(),
                     Name = reader["Name"].ToString(),
@@ -98,7 +102,10 @@ namespace FlightDataService
                     Type = reader["Type"].ToString(),
                     Email = reader["Email"].ToString(),
                     Contact = reader["Contact"].ToString(),
-                    BaggageType = reader["BaggageType"].ToString()
+                    BaggageType = reader["BaggageType"].ToString(),
+                    Age = reader["Age"].ToString(),
+                    Gender = reader["Gender"].ToString(),
+                    BirthDate = reader["BirthDate"].ToString()
                 });
             }
 
@@ -133,7 +140,10 @@ namespace FlightDataService
                     Type = reader["Type"].ToString(),
                     Email = reader["Email"].ToString(),
                     Contact = reader["Contact"].ToString(),
-                    BaggageType = reader["BaggageType"].ToString()
+                    BaggageType = reader["BaggageType"].ToString(),
+                    Age = reader["Age"].ToString(),
+                    Gender = reader["Gender"].ToString(),
+                    BirthDate = reader["BirthDate"].ToString()
                 };
             }
 
@@ -146,16 +156,18 @@ namespace FlightDataService
         string query = @"UPDATE Flight SET
                         Name = @Name,
                         Destination = @Destination,
-                        Departure = @Departure
+                        Departure = @Departure,
                         BaggageKg = @BaggageKg,
                         TotalCost = @TotalCost,
-                        Departure = @Departure,
                         Nationality = @Nationality,
-                        Date = @Date,
-                        Type = @Type,
+                        [Date] = @Date,
+                        [Type] = @Type,
                         Email = @Email,
                         Contact = @Contact,
-                        BaggageType = @BaggageType
+                        BaggageType = @BaggageType,
+                        Age = @Age,
+                        Gender = @Gender,
+                        BirthDate = @BirthDate
                      WHERE PassportNumber = @PassportNumber";
 
         SqlCommand cmd = new SqlCommand(query, sqlConnection);
@@ -172,6 +184,9 @@ namespace FlightDataService
         cmd.Parameters.AddWithValue("@Email", flightModels.Email);
         cmd.Parameters.AddWithValue("@Contact", flightModels.Contact);
         cmd.Parameters.AddWithValue("@BaggageType", flightModels.BaggageType);
+        cmd.Parameters.AddWithValue("@Age", flightModels.Age);
+        cmd.Parameters.AddWithValue("@Gender", flightModels.Gender);
+        cmd.Parameters.AddWithValue("@BirthDate", flightModels.BirthDate);
 
         sqlConnection.Open();
         cmd.ExecuteNonQuery();

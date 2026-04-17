@@ -31,8 +31,18 @@ namespace FlightDataService
             {
                 existing.Name = booking.Name;
                 existing.Destination = booking.Destination;
+                existing.Departure = booking.Departure;
+                existing.Type = booking.Type;
+                existing.BaggageType = booking.BaggageType;
+                existing.Contact = booking.Contact;
+                existing.Email = booking.Email;
+                existing.Date = booking.Date;
+                existing.BirthDate = booking.BirthDate;
+                existing.Age = booking.Age;
                 existing.BaggageKg = booking.BaggageKg;
                 existing.TotalCost = booking.TotalCost;
+                existing.Gender = booking.Gender;
+                existing.Nationality = booking.Nationality;
             }
         }
 

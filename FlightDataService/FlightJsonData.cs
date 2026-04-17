@@ -78,18 +78,22 @@ namespace FlightDataService
 
                         if (existing == null) return;
 
-                        existing.Name = updated.Name;
-                        existing.Nationality = updated.Nationality;
-                        existing.Departure = updated.Departure;
-                        existing.Destination = updated.Destination;
-                        existing.Date = updated.Date;
-                        existing.Type = updated.Type;
-                        existing.Contact = updated.Contact;
-                        existing.Email = updated.Email;
-                        existing.BaggageKg = updated.BaggageKg;
-                        existing.BaggageType = updated.BaggageType;
+            existing.Name = updated.Name;
+            existing.Destination = updated.Destination;
+            existing.Departure = updated.Departure;
+            existing.Type = updated.Type;
+            existing.BaggageType = updated.BaggageType;
+            existing.Contact = updated.Contact;
+            existing.Email = updated.Email;
+            existing.Date = updated.Date;
+            existing.BirthDate = updated.BirthDate;
+            existing.Age = updated.Age;
+            existing.BaggageKg = updated.BaggageKg;
+            existing.TotalCost = updated.TotalCost;
+            existing.Gender = updated.Gender;
+            existing.Nationality = updated.Nationality;
 
-                        SaveData();
+            SaveData();
                     }
 
         public void Delete(string passport)
