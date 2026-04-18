@@ -213,7 +213,7 @@ namespace FlightBookingSystem
         {
             string value;
 
-            Regex regex = new Regex(@"^[a-zA-Z0-9 \-]+$"); 
+            Regex regex = new Regex(@"^[a-zA-Z0-9 \-\,]+$"); 
 
             do
             {

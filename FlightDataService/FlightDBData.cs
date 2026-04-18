@@ -53,7 +53,7 @@ namespace FlightDataService
             cmd.Parameters.AddWithValue("@Email", flightModels.Email ?? "");
             cmd.Parameters.AddWithValue("@TotalCost", flightModels.TotalCost);
             cmd.Parameters.AddWithValue("@BaggageKg", flightModels.BaggageKg);
-            cmd.Parameters.AddWithValue("@BaggageType", flightModels.BaggageType);
+            cmd.Parameters.AddWithValue("@BaggageType", flightModels.BaggageType ?? "");
             cmd.Parameters.AddWithValue("@Age", flightModels.Age);
             cmd.Parameters.AddWithValue("@Gender", flightModels.Gender ?? "");
             cmd.Parameters.AddWithValue("@BirthDate", flightModels.BirthDate ?? "");
